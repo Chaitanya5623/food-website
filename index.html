@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quick Bites - Order Online</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+        }
+
+        header {
+            background-color: #ff4500;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        h2 {
+            color: #ff4500;
+        }
+
+        .item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            border: 1px solid #ddd;
+        }
+
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        button {
+            padding: 5px 12px;
+            font-size: 18px;
+            border: none;
+            background-color: #ff4500;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        #orderBox {
+            background: white;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 6px;
+            border: 1px solid #bbb;
+        }
+
+        #placeOrderBtn {
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            font-size: 20px;
+            background-color: green;
+        }
+    </style>
+
+</head>
+<body>
+
+<header>Quick Bites</header>
+
+<div class="container">
+
+    <h2>South Indian Tiffins</h2>
+
+    <div class="item">
+        <span>Idli (2 pcs) – ₹40</span>
+        <div class="qty-control">
+            <button onclick="decrease('idli')">-</button>
+            <span id="idliQty">0</span>
+            <button onclick="increase('idli')">+</button>
+        </div>
+    </div>
+
+    <div class="item">
+        <span>Dosa – ₹55</span>
+        <div class="qty-control">
+            <button onclick="decrease('dosa')">-</button>
+            <span id="dosaQty">0</span>
+            <button onclick="increase('dosa')">+</button>
+        </div>
+    </div>
+
+    <div class="item">
+        <span>Masala Dosa – ₹70</span>
+        <div class="qty-control">
+            <button onclick="decrease('masala')">-</button>
+            <span id="masalaQty">0</span>
+            <button onclick="increase('masala')">+</button>
+        </div>
+    </div>
+
+    <h2>Biryani</h2>
+
+    <div class="item">
+        <span>Chicken Biryani – ₹150</span>
+        <div class="qty-control">
+            <button onclick="decrease('cb')">-</button>
+            <span id="cbQty">0</span>
+            <button onclick="increase('cb')">+</button>
+        </div>
+    </div>
+
+    <div class="item">
+        <span>Veg Biryani – ₹120</span>
+        <div class="qty-control">
+            <button onclick="decrease('vb')">-</button>
+            <span id="vbQty">0</span>
+            <button onclick="increase('vb')">+</button>
+        </div>
+    </div>
+
+
+    <!-- CUSTOMER DETAILS -->
+    <div id="orderBox">
+        <h3>Customer Details</h3>
+        <input id="custName" type="text" placeholder="Your Name" />
+        <input id="custMobile" type="text" placeholder="Mobile Number" />
+        <textarea id="custAddress" rows="3" placeholder="Delivery Address"></textarea>
+
+        <button id="placeOrderBtn" onclick="placeOrder()">Place Order on WhatsApp</button>
+    </div>
+
+</div>
+
+<script>
+    let prices = {
+        idli: 40,
+        dosa: 55,
+        masala: 70,
+        cb: 150,
+        vb: 120
+    };
+
+    let qty = {
+        idli: 0,
+        dosa: 0,
+        masala: 0,
+        cb: 0,
+        vb: 0
+    };
+
+    function increase(item) {
+        qty[item]++;
+        document.getElementById(item + "Qty").innerText = qty[item];
+    }
+
+    function decrease(item) {
+        if (qty[item] > 0) qty[item]--;
+        document.getElementById(item + "Qty").innerText = qty[item];
+    }
+
+    function placeOrder() {
+        let name = document.getElementById("custName").value;
+        let mobile = document.getElementById("custMobile").value;
+        let address = document.getElementById("custAddress").value;
+
+        if (!name || !mobile || !address) {
+            alert("Please fill all details.");
+            return;
+        }
+
+        let message = `*New Order from Quick Bites*%0A%0A`;
+        let total = 0;
+
+        for (let item in qty) {
+            if (qty[item] > 0) {
+                message += `${item} x ${qty[item]} = ₹${qty[item] * prices[item]}%0A`;
+                total += qty[item] * prices[item];
+            }
+        }
+
+        message += `%0A*Total: ₹${total}*%0A%0A`;
+        message += `*Customer:* ${name}%0A`;
+        message += `*Mobile:* ${mobile}%0A`;
+        message += `*Address:* ${address}`;
+
+        let ownerNumber = "9052387726";
+        let url = `https://wa.me/${ownerNumber}?text=${message}`;
+
+        window.open(url, "_blank");
+    }
+</script>
+
+</body>
+</html>
